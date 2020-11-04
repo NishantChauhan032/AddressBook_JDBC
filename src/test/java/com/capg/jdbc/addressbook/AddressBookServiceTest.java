@@ -61,4 +61,12 @@ public class AddressBookServiceTest
 		Assert.assertEquals(1, countOfContaccts.get("Pune"), 0);
 		Assert.assertEquals(1, countOfContaccts.get("Patna"), 0);
 	}
+	
+	@Test
+	public void givenContactData_WhenAddedToDB_ShouldSyncWithDB() throws DBServiceException {
+		addressBookService.addNewContactToDB("Vimal","Kumar","Friend","Friend","002-Db Road","Dhanbad",
+				"Jharkhand","676756","9878754567","vimal@gmail.com","2018-03-04");
+		boolean checkIfSynced = addressBookService.checkForDBSync("Raj");
+		Assert.assertTrue(checkIfSynced);
+	}
 }

@@ -152,6 +152,21 @@ public class AddressBookServiceDB {
 			throw new DBServiceException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
 		}
 		return contactsCount;
-	}	
+	}
 
+	public List<Contacts>  addNewContactToDB(String firstName,String lastName,String addressBookName,String contactType,
+			String address,String city,String state,String zip,String phoneNo,String email,String date) throws DBServiceException {
+			String sql = String.format("insert into address_book (firstname,lastname,addressBookName,contactType,address,city,state,zip,phone_number,email,date_added)"+
+			" values ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');",firstName,lastName,addressBookName,contactType,address,city,state,zip,phoneNo,email,date);
+			try (Connection connection = AddressBookService.getConnection()) {
+				PreparedStatement preparedStatement = connection.prepareStatement(sql);
+				int result = preparedStatement.executeUpdate();
+				if (result == 1)
+					contacts = new Contacts(firstName,lastName,addressBookName,contactType,address,city,state,zip,phoneNo,email,date);
+					viewAddressBook().add(contacts);
+			}catch (Exception e) {
+				throw new DBServiceException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+			}
+			return viewAddressBook();
+		}
 }

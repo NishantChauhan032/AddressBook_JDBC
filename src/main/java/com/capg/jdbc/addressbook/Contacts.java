@@ -90,6 +90,19 @@ public class Contacts {
 		this.contactType = addressType;
 		this.addressBookName = address_name;
 	}
+	public Contacts(String firstName, String lastName, String addressBookName, String contactType, String address,
+			String city, String state, String zip, String phoneNo, String email, String date) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailId = email;
+		this.cityName = city;
+		this.address = address;
+		this.zipCode = zip;
+		this.stateName = state;
+		this.phoneNumber = phoneNo;
+		this.contactType = contactType;
+		this.addressBookName = addressBookName;
+	}
 	
 	
 	@Override
