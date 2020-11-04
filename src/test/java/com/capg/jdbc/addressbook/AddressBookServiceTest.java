@@ -1,5 +1,6 @@
 package com.capg.jdbc.addressbook;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,12 @@ public class AddressBookServiceTest
 		addressBookService.updateContactDetails("Pune" , "879123" , "Heera");
 		boolean checkIfSynced = addressBookService.checkForDBSync("Heera");
 		Assert.assertTrue(checkIfSynced);
+	}
+	
+	@Test
+	public void givenDateRange_WhenRetrieved_ShouldMatchContactsCount() throws DBServiceException{
+		contactList = addressBookService.viewContactsInADateRange(LocalDate.of(2018,01,01), LocalDate.now() );
+		Assert.assertEquals(3, contactList.size());
 	}
 	
 }
