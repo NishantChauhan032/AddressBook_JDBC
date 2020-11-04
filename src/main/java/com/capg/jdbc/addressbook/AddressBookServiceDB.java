@@ -1,6 +1,7 @@
 package com.capg.jdbc.addressbook;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -29,8 +30,8 @@ public class AddressBookServiceDB {
 				String state = resultSet.getString(8);
 				String zip = resultSet.getString(9);
 				String phoneNumber = resultSet.getString(10);
-				String email = resultSet.getString(11);
-				contacts = new Contacts(id,fisrtName,lastName,addressBookName,contactType,address,city,state,zip,phoneNumber,email);
+				String emailID = resultSet.getString(11);
+				contacts = new Contacts(id,fisrtName,lastName,addressBookName,contactType,address,city,state,zip,phoneNumber,emailID);
 				contactsList.add(contacts);
 			}
 		}
@@ -41,5 +42,77 @@ public class AddressBookServiceDB {
 		return contactsList;
 	}
 
+	public void updateContactDetails(String state,String zip,String firstName) throws DBServiceException
+	{
+		String query = "update address_book set state = ? , zip = ? where firstName = ?";
+		try(Connection con = AddressBookService.getConnection()) {
+			PreparedStatement preparedStatement = con.prepareStatement(query);
+			preparedStatement.setString(1, state);
+			preparedStatement.setString(2, zip);
+			preparedStatement.setString(3, firstName);
+			int result = preparedStatement.executeUpdate();
+			contacts = getContactDetails( firstName);
+			if(result > 0 && contacts != null)
+			{
+				contacts.setStateName(state);
+				contacts.setZipCode(zip);
+			}	
+		}catch (Exception e) {
+			throw new DBServiceException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+		}
+	}
 
+	private Contacts getContactDetails(String firstName) throws DBServiceException {
+		return viewAddressBook().stream()
+				                .filter(e -> e.getFirstName()
+				                .equals(firstName))
+				                .findFirst()
+				                .orElse(null);
+       }
+
+	public boolean checkForDBSync(String firstName) throws DBServiceException {
+		try {
+			return viewContactsByName(firstName).get(0).equals(getContactDetails(firstName));
+		} 
+		catch (IndexOutOfBoundsException e) {
+		} 
+		catch (Exception e) {
+			throw new DBServiceException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+		}
+		return false;
+	}
+
+	public List<Contacts> viewContactsByName(String firstName) throws DBServiceException
+	{
+		List<Contacts> contactListByName = new ArrayList<>();
+		String query = "select * from address_book where firstName = ?";
+		try(Connection con = AddressBookService.getConnection()) {
+			PreparedStatement preparedStatement = con.prepareStatement(query);
+			preparedStatement.setString(1, firstName );
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if(resultSet.next())
+			{
+				int id = resultSet.getInt(1);
+				String fisrtName = resultSet.getString(2);
+				String lastName = resultSet.getString(3);
+				String addressBookName = resultSet.getString(4);
+				String contactType = resultSet.getString(5);
+				String address = resultSet.getString(6);
+				String city = resultSet.getString(7);
+				String state = resultSet.getString(8);
+				String zip = resultSet.getString(9);
+				String phoneNumber = resultSet.getString(10);
+				String emailID = resultSet.getString(11);
+				contacts = new Contacts(id,fisrtName,lastName,addressBookName,contactType,address,city,state,zip,phoneNumber,emailID);
+				contactListByName.add(contacts);
+			}
+		} catch (Exception e) {
+			throw new DBServiceException("SQL Exception", DBServiceExceptionType.SQL_EXCEPTION);
+		}
+		System.out.println(contactListByName);
+		return contactListByName;
+	}	
+	
 }
+		
+	
