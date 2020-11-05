@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 
 public class AddressBookService 
 {
-	public static final String URL = "jdbc:mysql://localhost:3306/AddressBookSystem";
+	public static final String URL = "jdbc:mysql://localhost:3306/AddressBookService";
 	public static final String USER = "root";
 	public static final String PASSWORD = "Password@mysql1";
 	private static Connection connection = null;
