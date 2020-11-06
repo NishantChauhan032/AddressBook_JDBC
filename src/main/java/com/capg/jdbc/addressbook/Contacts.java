@@ -7,7 +7,15 @@ public class Contacts {
 	private String address,zipCode,stateName;
 	private String phoneNumber;
 	private String contactType,addressBookName;
+	private String date;
 	
+	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public int getId() {
 		return id;
 	}

@@ -169,4 +169,30 @@ public class AddressBookServiceDB {
 			}
 			return viewAddressBook();
 		}
+
+	public void addMultipleContactsToAddressBookDBUsingThreads(List<Contacts> record) {
+		Map<Integer,Boolean> contactAdditionStatus = new HashMap<>();
+		for(Contacts contact:record) {
+			Runnable task = ()->{
+				contactAdditionStatus.put(contact.hashCode(),false);
+				try {
+					addNewContactToDB(contact.getFirstName(),contact.getLastName(),contact.getAddressBookName(),contact.getContactType(),
+							contact.getAddress(),contact.getCityName(), contact.getStateName(), contact.getZipCode(),
+							contact.getPhoneNumber(), contact.getEmailId(),contact.getDate());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				contactAdditionStatus.put(contact.hashCode(),true);
+			};
+			Thread thread=new Thread(task,contact.getFirstName());
+			thread.start();
+		}
+		while(contactAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

@@ -10,7 +10,7 @@ public class AddressBookService
 	public static final String PASSWORD = "Password@mysql1";
 	private static Connection connection = null;
 	
-	public static Connection getConnection()
+	public synchronized static Connection getConnection()
 	{
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver"); 

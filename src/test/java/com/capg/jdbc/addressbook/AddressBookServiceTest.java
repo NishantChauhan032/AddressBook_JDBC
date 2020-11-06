@@ -2,6 +2,7 @@ package com.capg.jdbc.addressbook;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,5 +69,24 @@ public class AddressBookServiceTest
 				"Jharkhand","676756","9878754567","vimal@gmail.com","2018-03-04");
 		boolean checkIfSynced = addressBookService.checkForDBSync("Vimal");
 		Assert.assertTrue(checkIfSynced);
+	}
+	
+	@Test
+	public void givenMultipleContacts_WhenAdded_ShouldSyncWithTheDB() throws DBServiceException {
+		Contacts[] arrayOfContacts= {
+								new Contacts("Suraj","Asthana","Friend","Friend","Motihari",
+										"Champaran","Bihar","878675","9507028511", "suraj@gmail.com","2018-03-22"),
+								new Contacts("Rajeev","Kumar","Fanily","Family","Chainpur","Goraul",
+										"Bihar","836367","9567538676","rajeev@gmail.com","2018-08-18"),
+								new Contacts("Jeet","Yadav","Business","Business","Abc","Dhanbad",
+										"Jharkhand", "998786","7648794749","jeet@gmail.com","2019-03-11"),
+		};
+		addressBookService.addMultipleContactsToAddressBookDBUsingThreads(Arrays.asList(arrayOfContacts));
+		boolean checkIfSynced1 = addressBookService.checkForDBSync("Suraj");
+		boolean checkIfSynced2 = addressBookService.checkForDBSync("Rajeev");
+		boolean checkIfSynced3 = addressBookService.checkForDBSync("Jeet");
+		Assert.assertTrue(checkIfSynced1);
+		Assert.assertTrue(checkIfSynced2);
+		Assert.assertTrue(checkIfSynced3);
 	}
 }
