@@ -66,7 +66,7 @@ public class AddressBookServiceTest
 	public void givenContactData_WhenAddedToDB_ShouldSyncWithDB() throws DBServiceException {
 		addressBookService.addNewContactToDB("Vimal","Kumar","Friend","Friend","002-Db Road","Dhanbad",
 				"Jharkhand","676756","9878754567","vimal@gmail.com","2018-03-04");
-		boolean checkIfSynced = addressBookService.checkForDBSync("Raj");
+		boolean checkIfSynced = addressBookService.checkForDBSync("Vimal");
 		Assert.assertTrue(checkIfSynced);
 	}
 }
